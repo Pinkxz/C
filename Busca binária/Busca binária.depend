@@ -1,0 +1,5 @@
+# depslib dependency file v1.0
+1700264524 source:c:\users\pinkxz\desktop\c\busca binária\main.c
+	<stdio.h>
+	<stdlib.h>
+
