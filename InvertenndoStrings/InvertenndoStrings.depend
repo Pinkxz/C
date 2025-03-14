@@ -1,0 +1,6 @@
+# depslib dependency file v1.0
+1687217278 source:c:\users\pinkxz\desktop\c\invertenndostrings\main.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+
