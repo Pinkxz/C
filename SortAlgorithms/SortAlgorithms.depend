@@ -1,0 +1,11 @@
+# depslib dependency file v1.0
+1709505023 source:c:\users\pinkxz\desktop\c\sortalgorithms\sorts.c
+	"sorts.h"
+
+1709504857 c:\users\pinkxz\desktop\c\sortalgorithms\sorts.h
+	<stdio.h>
+
+1709505009 source:c:\users\pinkxz\desktop\c\sortalgorithms\main.c
+	<stdio.h>
+	"sorts.h"
+
