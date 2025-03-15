@@ -1,0 +1,6 @@
+# depslib dependency file v1.0
+1734400716 source:c:\users\pinkxz\desktop\c++\prova\main.c
+	<stdio.h>
+	<stdlib.h>
+	<locale.h>
+

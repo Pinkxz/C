@@ -1,0 +1,65 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <locale.h>
+
+
+typedef struct lista{
+    char nome[50];
+    char email[150];
+    int telefone;
+    struct lista *proximo;
+}ListaTelefonica;
+
+
+ListaTelefonica* inicializar();
+ListaTelefonica* inserir();
+void imprimir(ListaTelefonica*);
+
+int main()
+{
+    setlocale(LC_ALL, "Portuguese");
+
+    ListaTelefonica *lista1;
+    lista1 = inicializar();
+    lista1 = inserir();
+    imprimir(lista1);
+
+    return 0;
+}
+
+ListaTelefonica* inicializar(){
+    printf("nulificando");
+    return NULL;
+}
+
+ListaTelefonica* inserir(ListaTelefonica* destino){
+
+    ListaTelefonica* novo = (ListaTelefonica*) malloc(sizeof(ListaTelefonica));
+
+    printf("\nInsira o Nome: ");
+    gets(novo->nome);
+    printf("\nInsira o email: ");
+    scanf("%s", &novo->email);
+    fflush(stdin);
+    printf("\nInsira o telefone: ");
+    scanf("%d", &novo->telefone);
+    fflush(stdin);
+
+    novo->proximo=destino;
+
+    return novo;
+
+}
+
+void imprimir(ListaTelefonica* lista){
+
+    ListaTelefonica* auxiliar;
+
+    for(auxiliar=lista;auxiliar!=NULL;auxiliar=auxiliar->proximo){
+        printf("\nNome: %s", auxiliar->nome);
+        printf("\nEmail: %s", auxiliar->email);
+        printf("\nNumero: %d", auxiliar->telefone);
+    }
+}
+

@@ -1,0 +1,7 @@
+# depslib dependency file v1.0
+1733835695 source:c:\users\pinkxz\desktop\c++\listaproduto\main.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	<locale.h>
+
