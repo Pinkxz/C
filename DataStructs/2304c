@@ -1,0 +1,13 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+int main(){
+    
+        // Declare um ponteiro para um inteiro e
+        // Inciailize-o com endereço de uma variavel inteira.
+        int xp = 0;
+        int *pointer = &xp;
+        
+        printf("xp: %d/pointer: %d ", xp, pointer);
+    return 0;
+}
