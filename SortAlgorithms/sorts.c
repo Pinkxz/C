@@ -1,31 +1,31 @@
 #include "sorts.h"
 
-//Busca Binária
-/*Tempo médio: O(log n)
+//Busca Binï¿½ria
+/*Tempo mï¿½dio: O(log n)
 Melhor caso: O(1)
 Pior caso: O(log n)*/
 int binarySearch(int arr[], int left, int right, int x) {
     while (left <= right) {
         int mid = left + (right - left) / 2;
 
-        // Verifica se o elemento está presente no meio
+        // Verifica se o elemento estï¿½ presente no meio
         if (arr[mid] == x)
             return mid;
 
-        // Se o elemento é maior, ignore a metade esquerda
+        // Se o elemento ï¿½ maior, ignore a metade esquerda
         if (arr[mid] < x)
             left = mid + 1;
-        // Se o elemento é menor, ignore a metade direita
+        // Se o elemento ï¿½ menor, ignore a metade direita
         else
             right = mid - 1;
     }
 
-    // Se o elemento não estiver presente no array
+    // Se o elemento nï¿½o estiver presente no array
     return -1;
 }
 
 // Bubble Sort
-/*Tempo médio: O(n^2)
+/*Tempo mï¿½dio: O(n^2)
 Melhor caso: O(n)
 Pior caso: O(n^2)*/
 void bubbleSort(int arr[], int n) {
@@ -41,7 +41,7 @@ void bubbleSort(int arr[], int n) {
 }
 
 // Selection Sort
-/*Tempo médio: O(n^2)
+/*Tempo mï¿½dio: O(n^2)
 Melhor caso: O(n^2)
 Pior caso: O(n^2)
 */
@@ -63,7 +63,7 @@ void selectionSort(int arr[], int n) {
 }
 
 // Insertion Sort
-/*Tempo médio: O(n^2)
+/*Tempo mï¿½dio: O(n^2)
 Melhor caso: O(n)
 Pior caso: O(n^2)*/
 void insertionSort(int arr[], int n) {
@@ -80,7 +80,7 @@ void insertionSort(int arr[], int n) {
 }
 
 // Merge Sort
-/*Tempo médio: O(n log n)
+/*Tempo mï¿½dio: O(n log n)
 Melhor caso: O(n log n)
 Pior caso: O(n log n)*/
 void merge(int arr[], int l, int m, int r) {
@@ -133,7 +133,7 @@ void mergeSort(int arr[], int l, int r) {
 }
 
 // Quick Sort
-/*Tempo médio: O(n log n)
+/*Tempo mï¿½dio: O(n log n)
 Melhor caso: O(n log n)
 Pior caso: O(n^2)*/
 int partition(int arr[], int low, int high) {
@@ -164,10 +164,10 @@ void quickSort(int arr[], int low, int high) {
 }
 
 // Counting Sort
-/*Tempo médio: O(n + k)
+/*Tempo mï¿½dio: O(n + k)
 Melhor caso: O(n + k)
 Pior caso: O(n + k)
-Onde 'k' é o intervalo dos elementos (a diferença entre o maior e o menor elemento).*/
+Onde 'k' ï¿½ o intervalo dos elementos (a diferenï¿½a entre o maior e o menor elemento).*/
 void countingSort(int arr[], int n, int range) {
     int output[n];
     int count[range + 1];
@@ -186,10 +186,10 @@ void countingSort(int arr[], int n, int range) {
 }
 
 // Radix Sort
-/*/*Tempo médio: O(n * d)
+/*/*Tempo mï¿½dio: O(n * d)
 Melhor caso: O(n * d)
 Pior caso: O(n * d)
-Onde 'd' é o número de dígitos no maior número do array.*/*/
+Onde 'd' ï¿½ o nï¿½mero de dï¿½gitos no maior nï¿½mero do array.*/
 int getMax(int arr[], int n) {
     int max = arr[0];
     for (int i = 1; i < n; i++)
@@ -224,10 +224,10 @@ void radixSort(int arr[], int n) {
 }
 
 // Bucket Sort
-/*Tempo médio: O(n + k)
+/*Tempo mï¿½dio: O(n + k)
 Melhor caso: O(n + k)
 Pior caso: O(n^2)
-Onde 'k' é o número de baldes.*/
+Onde 'k' ï¿½ o nï¿½mero de baldes.*/
 void bucketSort(int arr[], int n) {
     int maxVal = arr[0];
     for (int i = 1; i < n; i++) {
@@ -252,7 +252,7 @@ void bucketSort(int arr[], int n) {
     }
 }
 
-// Função de impressão de array
+// Funï¿½ï¿½o de impressï¿½o de array
 void printArray(int arr[], int n) {
     for (int i = 0; i < n; i++) {
         printf("%d ", arr[i]);

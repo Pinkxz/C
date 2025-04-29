@@ -71,7 +71,7 @@ int buscarNaTabela(No* tabelaHash[], char* nome) {
 int main() {
     // Lista de nomes
     char* nomes[] = {"Abel", "Abelardo", "Ab�lio", "Abra�o", "Abrah�o", "Abr�o", "Ada", "Adalberto",
-                     "Adalgisa", "Ad�o", "Adela", "Adelaide", "Adelberto", "Ad�le", "Ad�lia", "Adelina", "Ademar", /* e assim por diante... */ };
+                     "Adalgisa", "Ad�o", "Adela", "Adelaide", "Adelberto", "Ad�le", "Ad�lia", "Adelina", "Ademar"};
 
     int numNomes = sizeof(nomes) / sizeof(nomes[0]);
 

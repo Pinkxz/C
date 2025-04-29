@@ -28,7 +28,7 @@ int main()
         gets(palavra);
 
         if(linhas == maximo){
-                printf("A matriz está cheia. Encerrando a inserção de strings.");
+                printf("A matriz esta cheia. Encerrando a insercao de strings.");
         break;
         }
         /*if(strcmp(palavra, "fim") == 0){
