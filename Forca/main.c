@@ -43,6 +43,8 @@ void imprime(int correto, int chances){
         }
     }
 
+}
+
 int main() {
     char palavra[100];
     char palavraOculta[100];
@@ -76,17 +78,17 @@ int main() {
         letraValida = 0;
         encontrou = 0;
 
-        // Verifica se a letra já foi usada antes
+        // Verifica se a letra jï¿½ foi usada antes
         for (i = 0; i < strlen(letrasUsadas) - 1; i++) {
             if (letrasUsadas[i] == letrasUsadas[strlen(letrasUsadas) - 1]) {
-                printf("Você já usou essa letra antes. Tente outra.\n");
+                printf("Vocï¿½ jï¿½ usou essa letra antes. Tente outra.\n");
                 letraValida = 1;
                 break;
             }
         }
 
         if (!letraValida) {
-            // Verifica se a letra digitada está presente na palavra
+            // Verifica se a letra digitada estï¿½ presente na palavra
             for (i = 0; i < tamanho; i++) {
                 if (palavra[i] == letrasUsadas[strlen(letrasUsadas) - 1]) {
                     palavraOculta[i] = palavra[i];
@@ -105,7 +107,7 @@ int main() {
     }
 
     if (acertos == tamanho) {
-        printf("\nParabéns! Você acertou a palavra: %s\n", palavra);
+        printf("\nParabï¿½ns! Voce acertou a palavra: %s\n", palavra);
     } else {
         printf("\nGame over! A palavra era: %s\n", palavra);
     }
