@@ -3,19 +3,31 @@
 #include <string.h>
 #include <ctype.h>
 
-#define TAM_LINHA 154
+#define MEM_SIZE 154
+#define MAX_LINHA 154
+#define NUM_INSTS 30
 
-unsigned char memoria[TAM_LINHA];
+// Memória principal
+unsigned char memoria[MEM_SIZE];
+
+// Lista de instruções e seus opcodes
+const char *INSTS[NUM_INSTS] = {
+    "hlt", "nop", "ldr", "str", "add", "sub", "mul", "div",
+    "cmp", "movr", "and", "or", "xor", "not", "je", "jne",
+    "jl", "jle", "jg", "jge", "jmp", "ld", "st", "movi",
+    "addi", "subi", "muli", "divi", "lsh", "rsh"
+};
+
+const int OPCODES[NUM_INSTS] = {
+    0b00000, 0b00001, 0b10101, 0b10110, 0b00010, 0b00011, 0b00100, 0b00101,
+    0b00110, 0b00111, 0b01000, 0b01001, 0b01010, 0b01011, 0b01100, 0b01101,
+    0b01110, 0b01111, 0b10000, 0b10001, 0b10010, 0b10011, 0b10100, 0b10111,
+    0b11000, 0b11001, 0b11010, 0b11011, 0b11100, 0b11101
+};
 
 void limpaEspacosEsquerda(char *s) {
-    int i = 0;
-    while (isspace((unsigned char)s[i])) i++;
-    if (i > 0) memmove(s, s + i, strlen(s + i) + 1);
-}
-
-void separaPosicao(char *entrada, char *posicao) {
-    sscanf(entrada, "%[^;]", posicao);
-    limpaEspacosEsquerda(posicao);
+    while (isspace((unsigned char)*s)) s++;
+    memmove(s - (s - s), s, strlen(s) + 1);
 }
 
 int hexaParaInt(const char *hexa) {
@@ -34,8 +46,9 @@ char tipoInstrucao(char *entrada, int ini) {
     return temp[0];
 }
 
-void limpaVetor(char *v, int tam) {
-    memset(v, '\0', tam);
+void separaPosicao(char *entrada, char *posicao) {
+    sscanf(entrada, "%[^;]", posicao);
+    limpaEspacosEsquerda(posicao);
 }
 
 void separaInstrucao(char *entrada, char *instrucao, int ini) {
@@ -56,81 +69,62 @@ int extraiValor(char *entrada, int ini) {
     return hexaParaInt(valorHex);
 }
 
-void guardaInstrucao(const char *instrucao, int pos, char *mem) {
-    const char *insts[] = {"hlt", "nop", "ldr", "str", "add", "sub", "mul", "div",
-                           "cmp", "movr", "and", "or", "xor", "not", "je", "jne",
-                           "jl", "jle", "jg", "jge", "jmp", "ld", "st", "movi",
-                           "addi", "subi", "muli", "divi", "lsh", "rsh"};
-
-    char op[10] = "", arg1[10] = "", arg2[10] = "";
-    int opcode = 0, reg1 = 0, reg2 = 0, imm = 0;
-    int is_immediate = 0;
+void guardaInstrucao(const char *instrucao, int pos, unsigned char *mem) {
+    char op[10], arg1[10], arg2[10] = "";
+    int opcode = -1, reg1 = 0, reg2 = 0, valor_imm = 0;
+    unsigned short cod = 0;
 
     sscanf(instrucao, "%s %[^,], %s", op, arg1, arg2);
 
-    for (int i = 0; i < 32; i++) {
-        if (strcmp(op, insts[i]) == 0) {
-            opcode = i;
+    for (int i = 0; i < NUM_INSTS; i++) {
+        if (strcmp(op, INSTS[i]) == 0) {
+            opcode = OPCODES[i];
             break;
         }
     }
 
+    if (opcode == -1) return;
+
     if (arg1[0] == 'r' || arg1[0] == 'R')
-        reg1 = atoi(arg1 + 1);
+        reg1 = (int)strtol(arg1 + 1, NULL, 10);
 
     if (arg2[0] == 'r' || arg2[0] == 'R') {
-        reg2 = atoi(arg2 + 1);
-        is_immediate = 0;
-    } else {
-        imm = (int)strtol(arg2, NULL, 16);
-        is_immediate = 1;
+        reg2 = (int)strtol(arg2 + 1, NULL, 10);
+        cod = (opcode << 11) | (reg1 << 8) | (reg2 << 5);
+    } else if (strlen(arg2) > 0) {
+        valor_imm = (int)strtol(arg2, NULL, 16);
+        cod = (opcode << 11) | (reg1 << 8) | (valor_imm & 0xFF);
     }
 
-    unsigned short cod;
-
-    if (is_immediate)
-        cod = (opcode << 11) | (reg1 << 8) | (imm & 0xFF);
-    else
-        cod = (opcode << 11) | (reg1 << 8) | (reg2 << 5);
-
-    mem[pos] = (cod >> 8) & 0xFF;
+    mem[pos]     = (cod >> 8) & 0xFF;
     mem[pos + 1] = cod & 0xFF;
 }
 
 void decodificaStringEGuardaNaMemoria(char *entrada, unsigned char *memoria) {
-    char posicao[6], instrucao[50], operacao[10], endereco[10];
+    char posicao[6], instrucao[50];
     int ini = 0;
 
-    limpaVetor(posicao, sizeof(posicao));
-    limpaVetor(instrucao, sizeof(instrucao));
-    limpaVetor(operacao, sizeof(operacao));
-    limpaVetor(endereco, sizeof(endereco));
+    memset(posicao, 0, sizeof(posicao));
+    memset(instrucao, 0, sizeof(instrucao));
 
     separaPosicao(entrada, posicao);
     int pos = hexaParaInt(posicao);
-    ini = proxInstrucao(entrada, ini, ';');
 
+    if (pos >= MEM_SIZE - 1) {
+        printf("Erro: posição %d fora dos limites da memória.\n", pos);
+        return;
+    }
+
+    ini = proxInstrucao(entrada, ini, ';');
     char tipo = tipoInstrucao(entrada, ini);
     ini = proxInstrucao(entrada, ini, ';');
 
     if (tipo == 'i') {
         separaInstrucao(entrada, instrucao, ini);
-
-        if (pos >= TAM_LINHA - 1) {
-            printf("Erro: posição %d fora dos limites da memória.\n", pos);
-            return;
-        }
-
-        guardaInstrucao(instrucao, pos, (char *)memoria);
-
+        guardaInstrucao(instrucao, pos, memoria);
     } else if (tipo == 'd') {
         int valor = extraiValor(entrada, ini);
-        if (pos >= TAM_LINHA - 1) {
-            printf("Erro: posição %d fora dos limites da memória.\n", pos);
-            return;
-        }
-
-        memoria[pos] = (valor >> 8) & 0xFF;
+        memoria[pos]     = (valor >> 8) & 0xFF;
         memoria[pos + 1] = valor & 0xFF;
     }
 }
@@ -143,24 +137,20 @@ void carregar_memoria(const char* nome_arquivo) {
         exit(1);
     }
 
-    char linha[TAM_LINHA];
-    while (fgets(linha, sizeof(linha), arquivo) != NULL) {
+    char linha[MAX_LINHA];
+    while (fgets(linha, sizeof(linha), arquivo)) {
         decodificaStringEGuardaNaMemoria(linha, memoria);
     }
 
-    if (fclose(arquivo) != 0) {
-        perror("Erro ao fechar arquivo");
-        exit(1);
-    }
+    fclose(arquivo);
 }
 
 int main() {
-    memset(memoria, 0x00, TAM_LINHA);
-
+    memset(memoria, 0x00, sizeof(memoria));
     carregar_memoria("entrada.txt");
 
-    for (int i = 0; i < TAM_LINHA; i++) {
-        printf("%d:\t\t0x%02x\n", i, memoria[i]);
+    for (int i = 0; i < MEM_SIZE; i++) {
+        printf("%3d:\t0x%02X\n", i, memoria[i]);
     }
 
     return 0;
