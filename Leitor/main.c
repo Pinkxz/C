@@ -38,6 +38,16 @@
 #define RSH   0b11101
 
 unsigned char memoria[TAM_LINHA];
+unsigned int MBR;
+unsigned short int MAR;
+unsigned char IR;
+unsigned char R0;
+unsigned char R1;
+unsigned int IMM;
+unsigned short int PC;
+unsigned char E, L, G;
+unsigned short int reg[4];
+
 
 void limpaEspacosEsquerda(char *s) {
     int i = 0;
