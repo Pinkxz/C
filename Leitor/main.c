@@ -98,6 +98,29 @@ int extraiValor(char *entrada, int ini) {
     return hexaParaInt(valorHex);
 }
 
+int zeraByte2(char entrada, char *memoria, short int posicao){ //Esqueci isso, a se corrigir
+    int opcode = getOpcode(entrada);
+    int memTemporaria = 0x00000000;
+    if(opcode == SUB){
+        memTemporaria = memoria[posicao] << 9;
+        memoria[posicao] = memoria[posicao] << 9; // Esqueci o que ia fazer, a corrigir
+        memoria[posicao] = 0b0000000;
+        memoria[posicao] = memTemporaria >> 9;
+
+        return memoria;
+    }
+}
+
+// Genialidade ou loucura
+int arrasta1bit(char *memoria, int posicao){
+    int memTemporaria = 0x00000000;
+    memTemporaria = memoria[posicao] << 5;
+    memoria[posicao] = memoria[posicao] << 6;
+    memoria[posicao] = memTemporaria >> 5;
+
+    return memoria;
+}
+
 int getOpcode(const char *op) {
     if (strcmp(op, "hlt") == 0) return HLT;
     if (strcmp(op, "nop") == 0) return NOP;
