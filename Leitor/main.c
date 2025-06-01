@@ -5,7 +5,7 @@
 
 #define TAM_LINHA 154
 
-// Definindo os opcodes para não ter que fazer na mão os bits em 'IFs'
+// Definindo os opcodes
 #define HLT   0b00000
 #define NOP   0b00001
 #define LDR   0b10101
@@ -37,64 +37,31 @@
 #define LSH   0b11100
 #define RSH   0b11101
 
-
-// Variaveis do Trabalho
+// Variáveis principais
 unsigned char memoria[TAM_LINHA];
-unsigned int MBR;
-unsigned short int MAR;
-unsigned char IR;
-unsigned char R0;
-unsigned char R1;
-unsigned int IMM;
-unsigned short int PC;
+unsigned short int PC, MAR;
+unsigned int MBR, IMM;
+unsigned char IR, R0, R1;
 unsigned char E, L, G;
 unsigned short int reg[4];
 
-
-// Comentando
-// Removendo espaços em branco do início de uma string (para evitar erros)
-void limpaEspacosEsquerda(char *s) {
-    int i = 0;
-    while (isspace((unsigned char)s[i])) i++;
-    if (i > 0) memmove(s, s + i, strlen(s + i) + 1);
-}
-
-// Separando as partes das instruções pelo ;
+// Separando a posição da memória
 void separaPosicao(char *entrada, char *posicao) {
     sscanf(entrada, "%[^;]", posicao);
-    limpaEspacosEsquerda(posicao);
 }
 
-
-// Função utilitária para converter hexadecimal para int (coloquei para facilitar colocar na posição de
-// memória e etc.
+// Converte hexadecimal para inteiro
 int hexaParaInt(const char *hexa) {
     return (int)strtol(hexa, NULL, 16);
 }
 
-
-// Pula pra próxima instrução
+// Retorna a próxima posição de separador
 int proxInstrucao(const char *entrada, int ini, char div) {
     char *p = strchr(entrada + ini, div);
     return p ? (int)(p - entrada) + 1 : strlen(entrada);
 }
 
-// Identifica se é instrução ou dado
-char tipoInstrucao(char *entrada, int ini) {
-    char temp[10];
-    sscanf(entrada + ini, "%[^;]", temp);
-    limpaEspacosEsquerda(temp);
-    return temp[0];
-}
-
-
-// Uitilitária - Zerando o vetor com \0 para evitar lixos de memória
-void limpaVetor(char *v, int tam) {
-    memset(v, '\0', tam);
-}
-
-
-// Separando as partes da instrução para poder identificar e guardar na memória
+// Separa a instrução principal
 void separaInstrucao(char *entrada, char *instrucao, int ini) {
     int i = 0;
     while (entrada[ini + i] && entrada[ini + i] != '/') {
@@ -103,19 +70,16 @@ void separaInstrucao(char *entrada, char *instrucao, int ini) {
     }
     if (entrada[ini + i] == '/') instrucao[i++] = '/';
     instrucao[i] = '\0';
-    limpaEspacosEsquerda(instrucao);
 }
 
-
-// Extraindo valores e retornando corretamente
+// Extrai valor em hexadecimal
 int extraiValor(char *entrada, int ini) {
     char valorHex[6];
     sscanf(entrada + ini, "%5s", valorHex);
-    limpaEspacosEsquerda(valorHex);
     return hexaParaInt(valorHex);
 }
 
-// Vários IFs para verificar o opcode
+// Obtém o opcode
 int getOpcode(const char *op) {
     if (strcmp(op, "hlt") == 0) return HLT;
     if (strcmp(op, "nop") == 0) return NOP;
@@ -150,10 +114,7 @@ int getOpcode(const char *op) {
     return -1;
 }
 
-
-// Faz um pequena decodificação dos dados para finalmente poder guardar na memória.
-// Fiz o máximo possível para ficar igualmente o exemplo no enunciado.
-// Instruções com imediato ocupando 3 Bytes e sem imediato ocupando 2.
+// Codifica e armazena instruções na memória
 void guardaInstrucao(const char *instrucao, int pos, char *mem) {
     char op[10], arg1[10], arg2[10] = "";
     int opcode = -1, reg1 = 0, reg2 = 0, valor_imm = 0;
@@ -170,38 +131,35 @@ void guardaInstrucao(const char *instrucao, int pos, char *mem) {
         cod = (opcode << 11) | (reg1 << 9) | (reg2 << 7);
         mem[pos] = (cod >> 8) & 0xFF;
         mem[pos + 1] = cod & 0xFF;
-
     } else if (strlen(arg2) > 0) {
         valor_imm = (int)strtol(arg2, NULL, 16);
         cod = (opcode << 11) | (reg1 << 9);
         mem[pos] = (cod >> 8) & 0xFF;
-        mem[pos + 1] = 0x00;               // Zera o segundo byte
-        mem[pos + 2] = valor_imm & 0xFF;   // Armazena o imediato na terceira posição
+        mem[pos + 1] = 0x00;
+        mem[pos + 2] = valor_imm & 0xFF;
     }
 }
 
-
-
-// Função principal que vai basicamente fazer a chamadas de todas as outras.
+// Decodifica linha de texto e armazena na memória
 void decodificaStringEGuardaNaMemoria(char *entrada, unsigned char *memoria) {
     char posicao[6], instrucao[50];
     int ini = 0;
 
-    limpaVetor(posicao, sizeof(posicao));
-    limpaVetor(instrucao, sizeof(instrucao));
+    memset(posicao, '\0', sizeof(posicao));
+    memset(instrucao, '\0', sizeof(instrucao));
 
     separaPosicao(entrada, posicao);
     int pos = hexaParaInt(posicao);
     ini = proxInstrucao(entrada, ini, ';');
 
-    char tipo = tipoInstrucao(entrada, ini);
+    // Pega o tipo direto
+    char tipo = entrada[ini];
     ini = proxInstrucao(entrada, ini, ';');
 
     if (tipo == 'i') {
         separaInstrucao(entrada, instrucao, ini);
         if (pos >= TAM_LINHA - 1) return;
         guardaInstrucao(instrucao, pos, (char *)memoria);
-
     } else if (tipo == 'd') {
         int valor = extraiValor(entrada, ini);
         if (pos >= TAM_LINHA - 1) return;
@@ -210,8 +168,7 @@ void decodificaStringEGuardaNaMemoria(char *entrada, unsigned char *memoria) {
     }
 }
 
-
-// Essa é a geral da geral kkkkk. Verificando se o arquivo existe, e abre ele e chamando a decodificaStringEGuardaNaMemoria.
+// Carrega arquivo na memória
 void carregar_memoria(const char* nome_arquivo) {
     printf("Carregando arquivo...\n");
     FILE* arquivo = fopen(nome_arquivo, "r");
@@ -228,9 +185,7 @@ void carregar_memoria(const char* nome_arquivo) {
     fclose(arquivo);
 }
 
-
-// Main, zerando a memória com memset.
-// Agora é basicamente fazer o ciclo :)
+// Main
 int main() {
     memset(memoria, 0x00, TAM_LINHA);
     carregar_memoria("entrada.txt");
@@ -241,5 +196,3 @@ int main() {
 
     return 0;
 }
-
-
