@@ -32,12 +32,12 @@ D - F:  1001 1100 0000 0000 1001 0010
 9    A    0    0    9    0
 
 # 15;i;add r1, r2
-0001 0010 1000 0000 0000 0000
-1    4    8    0    0    0
+0001 0011 0000 0000 0000 0000
+1    3    0    0    0    0
 
 # 17;i;st r1, 8e
 1010 0010 0000 0000 1000 1110
-A    4    0    0    8    E
+A    2    0    0    8    E
 
 # 1a;i;hlt
 0000 0000 0000 0000 0000 0000
@@ -47,7 +47,7 @@ A    4    0    0    8    E
 Posição [145] = 0x20
 
 # 92;d;3
-Posição [149] = 0x3
+Posição [146] = 0x3
 
 # 94;d;4
 Posição [149] = 0x4.
@@ -57,50 +57,3 @@ Posição [151] = 0x5
 
 # 98;d;3
 Posição [153] = 0x3
-
-int zeraByte2(char entrada, char *memoria, short int posicao){ //Esqueci isso, a se corrigir
-    int opcode = getOpcode(entrada);
-    int memTemporaria = 0x00000000;
-    if(opcode == SUB){
-        memTemporaria = memoria[posicao] << 9;
-        memoria[posicao] = memoria[posicao] << 9; // Esqueci o que ia fazer, a corrigir
-        memoria[posicao] = 0b0000000;
-        memoria[posicao] = memTemporaria >> 9;
-
-        return memoria;
-    }
-}
-
-int main(){
-    unsigned char memoriateste[11];
-    int i = 6;
-
-    memoriateste[0] = 0x98;
-    memoriateste[1] = 0x96;
-    memoriateste[2] = 0x00;
-    memoriateste[3] = 0x99;
-    memoriateste[4] = 0x98;
-    memoriateste[5] = 0x00;
-    memoriateste[6] = 0x18;
-    memoriateste[7] = 0x20;
-    memoriateste[8] = 0x99;
-    memoriateste[9] = 0x94;
-    memoriateste[10] = 0x00;
-
-    memoriateste[i] = arrasta1bit(memoriateste, i);
-
-    printf("%02x\n", memoriateste[0]);
-    printf("%02x\n", memoriateste[1]);
-    printf("%02x\n", memoriateste[2]);
-    printf("%02x\n", memoriateste[3]);
-    printf("%02x\n", memoriateste[4]);
-    printf("%02x\n", memoriateste[5]);
-    printf("%02x\n", memoriateste[6]);
-    printf("%02x\n", memoriateste[7]);
-    printf("%02x\n", memoriateste[8]);
-    printf("%02x\n", memoriateste[9]);
-    printf("%02x\n", memoriateste[10]);
-
-    return 0;
-
-}

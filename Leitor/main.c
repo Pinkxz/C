@@ -147,14 +147,18 @@ void guardaInstrucao(const char *instrucao, int pos, char *mem) {
     if (arg2[0] == 'r' || arg2[0] == 'R') {
         reg2 = atoi(arg2 + 1);
         cod = (opcode << 11) | (reg1 << 9) | (reg2 << 7);
+        mem[pos] = (cod >> 8) & 0xFF;
+        mem[pos + 1] = cod & 0xFF;
+
     } else if (strlen(arg2) > 0) {
         valor_imm = (int)strtol(arg2, NULL, 16);
-        cod = (opcode << 11) | (reg1 << 9) | (valor_imm & 0xFF);
+        cod = (opcode << 11) | (reg1 << 9);
+        mem[pos] = (cod >> 8) & 0xFF;
+        mem[pos + 1] = 0x00;               // Zera o segundo byte
+        mem[pos + 2] = valor_imm & 0xFF;   // Armazena o imediato na terceira posição
     }
-
-    mem[pos] = (cod >> 8) & 0xFF;
-    mem[pos + 1] = cod & 0xFF;
 }
+
 
 void decodificaStringEGuardaNaMemoria(char *entrada, unsigned char *memoria) {
     char posicao[6], instrucao[50];
