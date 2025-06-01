@@ -98,28 +98,6 @@ int extraiValor(char *entrada, int ini) {
     return hexaParaInt(valorHex);
 }
 
-int zeraByte2(char entrada, char *memoria, short int posicao){ //Esqueci isso, a se corrigir
-    int opcode = getOpcode(entrada);
-    int memTemporaria = 0x00000000;
-    if(opcode == SUB){
-        memTemporaria = memoria[posicao] << 9;
-        memoria[posicao] = memoria[posicao] << 9; // Esqueci o que ia fazer, a corrigir
-        memoria[posicao] = 0b0000000;
-        memoria[posicao] = memTemporaria >> 9;
-
-        return memoria;
-    }
-}
-
-// Genialidade ou loucura
-int arrasta1bit(char *memoria, int posicao){
-    int memTemporaria = 0x00000000;
-    memTemporaria = memoria[posicao] << 5;
-    memoria[posicao] = memoria[posicao] << 6;
-    memoria[posicao] = memTemporaria >> 5;
-
-    return memoria;
-}
 
 int getOpcode(const char *op) {
     if (strcmp(op, "hlt") == 0) return HLT;
@@ -168,10 +146,10 @@ void guardaInstrucao(const char *instrucao, int pos, char *mem) {
 
     if (arg2[0] == 'r' || arg2[0] == 'R') {
         reg2 = atoi(arg2 + 1);
-        cod = (opcode << 11) | (reg1 << 8) | (reg2 << 5);
+        cod = (opcode << 11) | (reg1 << 9) | (reg2 << 7);
     } else if (strlen(arg2) > 0) {
         valor_imm = (int)strtol(arg2, NULL, 16);
-        cod = (opcode << 11) | (reg1 << 8) | (valor_imm & 0xFF);
+        cod = (opcode << 11) | (reg1 << 9) | (valor_imm & 0xFF);
     }
 
     mem[pos] = (cod >> 8) & 0xFF;
@@ -205,6 +183,8 @@ void decodificaStringEGuardaNaMemoria(char *entrada, unsigned char *memoria) {
     }
 }
 
+
+
 void carregar_memoria(const char* nome_arquivo) {
     printf("Carregando arquivo...\n");
     FILE* arquivo = fopen(nome_arquivo, "r");
@@ -231,3 +211,5 @@ int main() {
 
     return 0;
 }
+
+
