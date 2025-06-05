@@ -164,7 +164,7 @@ void decodificaStringEGuardaNaMemoria(char *entrada, unsigned char *memoria) {
         int valor = extraiValor(entrada, ini);
         if (pos >= TAM_LINHA - 1) return;
         memoria[pos] = (valor >> 8) & 0xFF;
-        memoria[pos + 1] = valor & 0xFF;
+        memoria[pos] = valor & 0xFF;
     }
 }
 
@@ -190,9 +190,13 @@ int main() {
     memset(memoria, 0x00, TAM_LINHA);
     carregar_memoria("entrada.txt");
 
-    for (int i = 0; i < TAM_LINHA; i++) {
-        printf("%d:\t\t0x%02x\n", i, memoria[i]);
-    }
+        for (int impressao = 0; impressao < 154; impressao++) {
+            printf("%3d: 0x%02x\t", impressao, memoria[impressao]);
+            
+            if ((impressao + 1) % 10 == 0) {
+                printf("\n");
+            }
+        }
 
     return 0;
 }
