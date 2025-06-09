@@ -7,28 +7,28 @@
 
 // Definindo os opcodes
 #define HLT   0b00000
-#define NOP   0b00001
-#define LDR   0b10101
-#define STR   0b10110
-#define ADD   0b00010
-#define SUB   0b00011
-#define MUL   0b00100
-#define DIV   0b00101
-#define CMP   0b00110
-#define MOVR  0b00111
-#define AND   0b01000
-#define OR    0b01001
-#define XOR   0b01010
-#define NOT   0b01011
-#define JE    0b01100
-#define JNE   0b01101
-#define JL    0b01110
-#define JLE   0b01111
-#define JG    0b10000
-#define JGE   0b10001
-#define JMP   0b10010
-#define LD    0b10011
-#define ST    0b10100
+#define NOP   0b00001 
+#define LDR   0b00010
+#define STR   0b00011
+#define ADD   0b00100
+#define SUB   0b00101
+#define MUL   0b00110
+#define DIV   0b00111
+#define CMP   0b01000
+#define MOVR  0b01001
+#define AND   0b01010
+#define OR    0b01011
+#define XOR   0b01100
+#define NOT   0b01101
+#define JE    0b01110
+#define JNE   0b01111
+#define JL    0b10000
+#define JLE   0b10001
+#define JG    0b10010
+#define JGE   0b10011
+#define JMP   0b10100
+#define LD    0b10101
+#define ST    0b10110
 #define MOVI  0b10111
 #define ADDI  0b11000
 #define SUBI  0b11001
@@ -36,6 +36,7 @@
 #define DIVI  0b11011
 #define LSH   0b11100
 #define RSH   0b11101
+
 
 // Variáveis principais
 unsigned char memoria[TAM_LINHA];
