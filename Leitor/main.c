@@ -6,8 +6,8 @@
 #define TAM_LINHA 154
 
 // Definindo os opcodes
-#define HLT   0b00000
-#define NOP   0b00001 
+#define HLT   0b00000 // Ok
+#define NOP   0b00001 // Ok
 #define LDR   0b00010
 #define STR   0b00011
 #define ADD   0b00100
