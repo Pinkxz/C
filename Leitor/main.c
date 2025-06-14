@@ -142,7 +142,7 @@ void guardaInstrucao(const char *instrucao, int pos, char *mem) {
         return;
     }
 
-    // Instruções de salto (1 imediato)
+    // Instruções de salto (1 MAR)
     if (
         strcmp(op, "je") == 0 || strcmp(op, "jne") == 0 ||
         strcmp(op, "jl") == 0 || strcmp(op, "jle") == 0 ||
@@ -169,8 +169,9 @@ void guardaInstrucao(const char *instrucao, int pos, char *mem) {
         valor_imm = (int)strtol(arg2, NULL, 16);
         cod = (opcode << 11) | (reg1 << 9);
         mem[pos] = (cod >> 8) & 0xFF;
-        mem[pos + 1] = 0x00;
-        mem[pos + 2] = valor_imm & 0xFF;
+        mem[pos + 1] = (valor_imm >> 8) & 0xFF;  // byte alto
+        mem[pos + 2] = valor_imm & 0xFF;         // byte baixo
+
     }
 }
 
